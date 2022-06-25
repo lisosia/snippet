@@ -1,14 +1,15 @@
-### Object Pool Class
+# Object Pool Class
 
-##### run sample program
+### run sample program
 
 ```
 mkdir build && cd build
 cmake ..
+make
 ./src/main
 ```
 
-##### run googletest integrated with cmake's ctest
+#### run googletest integrated with cmake's ctest
 
 ```
 $ ctest 
