@@ -2,9 +2,16 @@
 #include <mutex>
 #include <stack>
 
-// Object Pool Class
-// All object must be returned to pool before pool deleted
+// Default Allocator
 template <typename T>
+struct DefaultAllocator {
+    static T* allocate() { return new T(); }
+};
+
+// Object pool class
+// get object by acquire() and return to pool by release()
+// if no object pooled when acquire(), new object will be allocated by Allocator
+template <typename T, typename Allocator = DefaultAllocator<T>>
 class ObjectPool {
 public:
     ObjectPool() {}
@@ -14,7 +21,7 @@ public:
         std::lock_guard<std::mutex> l(lock_);
 
         if (pool_.empty()) {
-            std::unique_ptr<T> obj(new T());
+            std::unique_ptr<T> obj(Allocator::allocate());
             return obj;
         } else {
             std::unique_ptr<T> obj(std::move(pool_.top()));

@@ -40,3 +40,19 @@ TEST(ObjPool, reuse2) {
     // 0 obj pooled
     EXPECT_EQ(pool.size(), 0);
 }
+
+struct Int123CustomAllocator {
+    static int* allocate() {
+         return new int(123);
+    }
+};
+
+TEST(ObjPool, custom_allocator) {
+    ObjectPool<int> pool1;
+    auto o1 = pool1.acquire();
+    EXPECT_EQ(*o1.get(), 0);
+
+    ObjectPool<int, Int123CustomAllocator> pool2;
+    auto o2 = pool2.acquire();
+    EXPECT_EQ(*o2.get(), 123);
+}
